@@ -1,0 +1,17 @@
+{
+    "name": "juoum/giaeconnect",
+    "description": "This PHP class provides an unofficial API for the GIAE platform (Gestão Integrada para Administração Escolar), widely used on Portuguese public schools, on behalf of a given user.",
+    "version": "v1.0.0",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "juoum"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "juoum\\GiaeConnect\\": "src/"
+        }
+    }
+}
