@@ -478,11 +478,11 @@ class GiaeConnect {
 
     public function getMensagensArquivadas(){
 
-        $paayloas = json_encode([
+        $payload = json_encode([
             "acao"=>"get_mensagens_arquivadas"
         ]);
 
-        return $this->post("mensagens", $paayloas);
+        return $this->post("mensagens", $payload);
 
     }
 
