@@ -16,7 +16,7 @@ class GiaeConnect {
             $this->escola = $codescola;
 
         if(!empty($user)) {
-            $this->session = $this->getSession($codescola, $user, $pass);
+            $this->session = $this->getSession($user, $pass);
         }
 
     }
