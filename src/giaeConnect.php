@@ -376,7 +376,7 @@ class GiaeConnect {
 
         $payload = json_encode([
             "datainicio"=>"$datainicio",
-            "darafim"=>"$datafim",
+            "datafim"=>"$datafim",
             "acao"=>"get_registo_portaria_2"
         ]);
 
