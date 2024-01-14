@@ -131,6 +131,12 @@ class GiaeConnect {
     
     }
 
+    public function logout(){
+
+        $this->get("logout");
+
+    }
+
     public function getEscola(){
 
         return $this->get("escolas");
