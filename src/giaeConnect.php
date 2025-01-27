@@ -114,16 +114,19 @@ class GiaeConnect {
         } else {
             $cookieValue = null;
             if (preg_match('/\b' . "sessao" . '\s*=\s*([^;]+)/i', $response, $matches)) {
-                $cookieValue = $matches[1];
-                // Find the position of the first space
-                $firstSpacePos = strpos($cookieValue, 'content-length:');
+            $cookieValue = $matches[1];
+            // Find the position of the first occurrence of 'content-length:' or 'Content-Length:'
+            $firstSpacePos = stripos($cookieValue, 'content-length:');
+            if ($firstSpacePos === false) {
+                $firstSpacePos = stripos($cookieValue, 'Content-Length:');
+            }
 
-                if ($firstSpacePos !== false) {
-                    // Extract the part of the cookie value before the first space
-                    $modifiedValue = substr($cookieValue, 0, $firstSpacePos);
-                    $session = substr($modifiedValue, 0, -2) . ";";
-                    return $session;
-                }
+            if ($firstSpacePos !== false) {
+                // Extract the part of the cookie value before the first occurrence
+                $modifiedValue = substr($cookieValue, 0, $firstSpacePos);
+                $session = substr($modifiedValue, 0, -2) . ";";
+                return $session;
+            }
             }
         }
         
