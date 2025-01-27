@@ -116,7 +116,7 @@ class GiaeConnect {
             if (preg_match('/\b' . "sessao" . '\s*=\s*([^;]+)/i', $response, $matches)) {
                 $cookieValue = $matches[1];
                 // Find the position of the first space
-                $firstSpacePos = strpos($cookieValue, 'Content-Length:');
+                $firstSpacePos = strpos($cookieValue, 'content-length:');
 
                 if ($firstSpacePos !== false) {
                     // Extract the part of the cookie value before the first space
