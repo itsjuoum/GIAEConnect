@@ -495,6 +495,14 @@ class GiaeConnect {
 
     }
 
+    public function getPerfil(){
+
+        $payload = json_encode([
+            "acao"=>"get_perfil"
+        ]);
+
+        return $this->post("perfil", $payload);
+    }
 }
 
 ?>
