@@ -8,7 +8,7 @@ To utilize this class, first import giaeConnect.php into your project, and requi
 ```require_once('./src/giaeConnect.php');```
 
 
-### With Composer
+### With Composer (recommended)
 
 Run the following commands inside your project directory
 ```
@@ -27,4 +27,6 @@ Check the [wiki](https://github.com/itsjuoum/GIAEConnect/wiki) for a detailed gu
 I appreciate any improvements or enhancements you can bring to this project. If you have ideas, bug fixes, or new features to propose, please don't hesitate to submit a pull request. 
 
 <hr>
-Developed and tested on v.5.0.55.6. 
+:wrench: Developed on v.5.0.55.6.
+
+:heavy_check_mark: Last tested on v5.0.60.4.
