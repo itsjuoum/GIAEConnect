@@ -10,6 +10,10 @@ class GiaeConnect {
 
     function __construct($domain, $user="", $pass="") {
 
+        if (empty($domain)) {
+            throw new \InvalidArgumentException('Domain cannot be empty');
+        }
+
         $this->domain = $domain;
 
             $codescola = json_decode($this->getEscola(), true)['escolas'][0]['codescola'];
