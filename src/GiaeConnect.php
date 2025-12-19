@@ -7,6 +7,7 @@ class GiaeConnect {
     private $domain;
     private $escola;
     public $session;
+    public $sslValidation = true;
 
     function __construct($domain, $user="", $pass="") {
 
@@ -35,7 +36,7 @@ class GiaeConnect {
         
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Disable SSL verification
+        $this->sslValidation ? curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true) : curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
         curl_setopt($ch, CURLOPT_COOKIE, "sessao=$this->session");
