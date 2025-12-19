@@ -55,8 +55,6 @@ class GiaeConnect {
         } else {
             return iconv("ISO-8859-1", "UTF-8//TRANSLIT", $response);
         }
-    
-        curl_close($ch);
         
     }
 
@@ -80,8 +78,6 @@ class GiaeConnect {
         } else {
             return iconv("ISO-8859-1", "UTF-8//TRANSLIT", $response);
         }
-    
-        curl_close($ch);
         
     }
 
@@ -134,8 +130,6 @@ class GiaeConnect {
             }
             }
         }
-        
-        curl_close($ch);
     
     }
 
