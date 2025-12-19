@@ -5,7 +5,7 @@ This PHP class provides an unofficial API for the GIAE platform (Gestão Integra
 ## Installation
 To utilize this class, first import giaeConnect.php into your project, and require it.
 
-```require_once('./src/giaeConnect.php');```
+```require_once('./src/GiaeConnect.php');```
 
 
 ### With Composer (recommended)
