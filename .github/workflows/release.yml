@@ -1,0 +1,97 @@
+name: Release & Deploy
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release version tag (e.g. v2.0.2)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Run Tests & Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring, iconv
+
+      - name: Lint source files
+        run: php -l src/GiaeConnect.php
+
+      - name: Run Test Suite
+        run: php tests/SecurityAndFunctionalTest.php
+
+  release:
+    name: Create Release & Deploy Asset
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Release Version
+        id: version_check
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "Detected tag push: ${{ github.ref_name }}"
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual release dispatch: ${{ inputs.tag_name }}"
+            echo "tag=${{ inputs.tag_name }}" >> $GITHUB_OUTPUT
+            echo "should_release=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            COMMIT_MSG="${{ github.event.head_commit.message }}"
+            VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+            if [ -n "$VERSION" ]; then
+              echo "Found version in commit message: $VERSION"
+              echo "tag=$VERSION" >> $GITHUB_OUTPUT
+              echo "should_release=true" >> $GITHUB_OUTPUT
+            else
+              echo "Push to main without version tag in commit message. Skipping release."
+              echo "should_release=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare standalone release file
+        if: steps.version_check.outputs.should_release == 'true'
+        run: |
+          cp src/GiaeConnect.php ./GiaeConnect.php
+          ls -la GiaeConnect.php
+
+      - name: Create or Update GitHub Release
+        if: steps.version_check.outputs.should_release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.version_check.outputs.tag }}
+        run: |
+          # If the release already exists, upload/clobber asset. If not, create release with asset.
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists. Uploading GiaeConnect.php asset..."
+            gh release upload "$RELEASE_TAG" GiaeConnect.php --clobber
+          else
+            echo "Creating new release $RELEASE_TAG and attaching GiaeConnect.php..."
+            gh release create "$RELEASE_TAG" \
+              GiaeConnect.php \
+              --title "$RELEASE_TAG" \
+              --generate-notes
+          fi
